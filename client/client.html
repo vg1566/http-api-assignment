@@ -5,7 +5,86 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script>
+    const handleResponse = (response) => {
+      response.text().then((resText) => {
+        let contentType = response.headers.get('Content-Type');
+        let content = document.querySelector('#content');
 
+
+        const h1 = document.createElement('h1');
+        const p = document.createElement('p');
+        //const h2 = document.createElement('h2');
+        //const rawData = document.createElement('p');
+        console.log(resText);
+        
+        switch(response.status) {
+        case 200: // Success
+          h1.textContent = `Success`;
+          break;
+        case 400: // Bad Request
+          h1.textContent = `Bad Request`;
+          break;
+        case 401: // Unauthorized
+          h1.textContent = `Unauthorized`;
+          break;
+        case 403: // Forbidden
+          h1.textContent = `Forbidden`;
+          break;
+        case 500: // Internal Server Error
+          h1.textContent = `Internal Server Error`;
+          break;
+        case 501: // Not Implemented
+          h1.textContent = `Not Implemented`;
+          break;
+        default: // Anything Else
+          h1.textContent = `Resource Not Found`;
+          break;
+        }
+
+        //Add the content type and raw response text to elements
+        //h2.textContent = contentType;
+        //rawData.textContent = resText;
+
+        //If the server sent back json
+        if(contentType === 'application/json') {
+          //Parse the json back into a javascript object, and display the data.
+          let parsedResponse = JSON.parse(resText);
+          p.textContent = `Message: ${parsedResponse.message}`;
+        } else if (contentType === 'text/xml') { //If the server sent back xml
+          //Parse the xml into a document and select the data out.
+          let parsedResponse = new window.DOMParser().parseFromString(resText, 'text/xml');
+          p.textContent = 'Message: ' + parsedResponse.querySelector('message').textContent;
+        }
+
+        //Add the elements to the screen.
+        content.appendChild(h1);
+        content.appendChild(p);
+        //content.appendChild(h2);
+        //content.appendChild(rawData);
+      });
+    }
+
+    const sendFetchRequest = (url, acceptedType) => {
+      const options = {
+        method: 'GET',
+        headers: {'Accept': acceptedType},
+      }
+
+      let fetchPromise = fetch(url, options);
+
+      fetchPromise.then((response) => { handleResponse(response) });
+    };
+
+    const init = () => {
+      //First we grab references to the two buttons in our HTML below.
+      const sendButton = document.querySelector("#send");
+      const typeMenu = document.querySelector("#type");
+      const pageMenu = document.querySelector("#page")
+
+      sendButton.onclick = () => sendFetchRequest(pageMenu.value, typeMenu.value);
+    };
+
+    window.onload = init;
   </script>
 </head>
 <body>
