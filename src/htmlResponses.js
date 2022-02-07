@@ -1,9 +1,6 @@
 const fs = require('fs'); // pull in the file system module
 
 // load files into memory
-// This is a synchronous operation, so you'd only
-// want to do it on startup.
-// This not the best way to load files unless you have few files.
 const index = fs.readFileSync(`${__dirname}/../client/client.html`);
 const css = fs.readFileSync(`${__dirname}/../client/style.css`);
 

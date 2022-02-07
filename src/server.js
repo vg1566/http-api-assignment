@@ -19,9 +19,6 @@ const urlStruct = {
     '/notImplemented': mixedHandler.notImplemented,
     notFound: mixedHandler.notFound,
   },
-  HEAD: {
-    notFound: mixedHandler.notFoundMeta,
-  },
 };
 
 const onRequest = (request, response) => {

@@ -13,8 +13,6 @@
 
         const h1 = document.createElement('h1');
         const p = document.createElement('p');
-        //const h2 = document.createElement('h2');
-        //const rawData = document.createElement('p');
         console.log(resText);
         
         switch(response.status) {
@@ -41,26 +39,20 @@
           break;
         }
 
-        //Add the content type and raw response text to elements
-        //h2.textContent = contentType;
-        //rawData.textContent = resText;
-
-        //If the server sent back json
+        // If the server sent back json
         if(contentType === 'application/json') {
-          //Parse the json back into a javascript object, and display the data.
+          // Parse the json back into a javascript object, and display the data.
           let parsedResponse = JSON.parse(resText);
           p.textContent = `Message: ${parsedResponse.message}`;
-        } else if (contentType === 'text/xml') { //If the server sent back xml
-          //Parse the xml into a document and select the data out.
+        } else if (contentType === 'text/xml') { // If the server sent back xml
+          // Parse the xml into a document and select the data out.
           let parsedResponse = new window.DOMParser().parseFromString(resText, 'text/xml');
           p.textContent = 'Message: ' + parsedResponse.querySelector('message').textContent;
         }
 
-        //Add the elements to the screen.
+        // Add the elements to the screen.
         content.appendChild(h1);
         content.appendChild(p);
-        //content.appendChild(h2);
-        //content.appendChild(rawData);
       });
     }
 
@@ -76,10 +68,9 @@
     };
 
     const init = () => {
-      //First we grab references to the two buttons in our HTML below.
       const sendButton = document.querySelector("#send");
       const typeMenu = document.querySelector("#type");
-      const pageMenu = document.querySelector("#page")
+      const pageMenu = document.querySelector("#page");
 
       sendButton.onclick = () => sendFetchRequest(pageMenu.value, typeMenu.value);
     };

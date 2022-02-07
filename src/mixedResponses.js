@@ -1,19 +1,7 @@
-const respondJSON = (request, response, status, object) => {
-  // object for our headers
-  // Content-Type for json
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-
-  // send response with object
-  response.writeHead(status, headers);
-  response.write(JSON.stringify(object));
-  response.end();
-};
-
 const respond = (request, response, status, content, type) => {
   response.writeHead(status, { 'Content-Type': type });
-  response.write(content);
+  if (type === 'application/json') response.write(JSON.stringify(content));
+  else response.write(content);
   response.end();
 };
 
@@ -24,20 +12,7 @@ const sortResponse = (request, response, status, object, acceptedTypes) => {
     responseXML += '</response>';
     return respond(request, response, status, responseXML, 'text/xml');
   }
-  return respondJSON(request, response, status, object);
-};
-
-// respondJSON with no body
-const respondJSONMeta = (request, response, status) => {
-  // object for our headers
-  // Content-Type for json
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-
-  // send response without object
-  response.writeHead(status, headers);
-  response.end();
+  return respond(request, response, status, object, 'application/json');
 };
 
 // #region messages
@@ -115,12 +90,6 @@ const notFound = (request, response, acceptedTypes) => {
   return sortResponse(request, response, 404, responseJSON, acceptedTypes);
 };
 
-// notFound without message
-const notFoundMeta = (request, response) => {
-  // return a 404 without an error message
-  respondJSONMeta(request, response, 404);
-};
-
 // #endregion
 
 module.exports = {
@@ -131,5 +100,4 @@ module.exports = {
   internal,
   notImplemented,
   notFound,
-  notFoundMeta,
 };
